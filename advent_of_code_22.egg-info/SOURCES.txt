@@ -1,0 +1,6 @@
+README.md
+setup.py
+advent_of_code_22.egg-info/PKG-INFO
+advent_of_code_22.egg-info/SOURCES.txt
+advent_of_code_22.egg-info/dependency_links.txt
+advent_of_code_22.egg-info/top_level.txt
