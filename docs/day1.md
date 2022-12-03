@@ -47,3 +47,10 @@ Solution:
 3. Loop over each of the sub arrays of strings, converting each string to a numeric type.
 4. Sum each array of numbers
 5. Return max value
+
+### Part 2: Report total of top 3 calorie carriers
+
+Solution:
+
+1. Sort list in descending order of calories carried
+2. Sum first 3 elements
