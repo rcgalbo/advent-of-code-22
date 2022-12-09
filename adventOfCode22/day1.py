@@ -1,9 +1,6 @@
 
 
 def parse_data(data_string: str) -> list[int]:
-    '''
-    Parse data string to 
-    '''
     # step 1
     elf_calorie_strings = data_string.split('\n\n')
     # step 2
