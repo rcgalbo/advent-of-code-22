@@ -20,3 +20,4 @@ python advenOfCode/day1.py
 - [Day 1: Calorie Counting](https://github.com/rcgalbo/advent-of-code-22/blob/main/adventOfCode22/day1.py)
 - [Day 2: Rock Paper Scissors](https://github.com/rcgalbo/advent-of-code-22/blob/main/adventOfCode22/day2.py)
 - [Day 3: Rucksack Reorganization](https://github.com/rcgalbo/advent-of-code-22/blob/main/adventOfCode22/day3.py)
+- [Day 4: Camp Cleanup](https://github.com/rcgalbo/advent-of-code-22/blob/main/adventOfCode22/day4.py)
