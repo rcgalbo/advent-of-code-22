@@ -2,14 +2,14 @@
 ## Day 3: Rucksack Reorganization
 
 Have rucksacks filled with items
-
+```
 vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw
-
+```
 Each line is a rucksack. Each rucksack is split into two compartments each containing the same amount of items. 
 
 So vJrwpWtwJgWr|hcsFMMfFFhFp is the two compartments of the first string.
