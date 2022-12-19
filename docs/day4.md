@@ -1,6 +1,6 @@
 # Advent Of Code
 ## Day 4: Camp Cleanup
-
+```
 2-4,6-8
 2-3,4-5
 5-7,7-9
@@ -25,7 +25,7 @@
 
 .23456...  2-6
 ...45678.  4-8
-
+```
 Part 1: In how many assignment pairs does one range fully contain the other?
 
 Solution:
