@@ -2,7 +2,8 @@ def parse_line(line: str) -> tuple[set[int],set[int]]:
     elf1, elf2 = line.split(',')
     elf1_start, elf1_end = (int(i) for i in elf1.split('-'))
     elf2_start, elf2_end = (int(i) for i in elf2.split('-'))
-    return (set(range(elf1_start, elf1_end+1)), set(range(elf2_start, elf2_end+1)))
+    return (set(range(elf1_start, elf1_end+1)), 
+            set(range(elf2_start, elf2_end+1)))
 
 def parse_input_string(input_string: str) -> list[tuple[set[int],set[int]]]:
     lines = [line for line in input_string.split('\n') if line != '']
