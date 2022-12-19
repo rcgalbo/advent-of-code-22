@@ -4,7 +4,7 @@ def parse_input_string(input_string: str) -> tuple[dict[str, list[int]], list[li
     instructions = extract_instuctions(instruction_str)
     return (stacks, instructions)
 
-def extract_stacks(input_string: str) -> dict[str,int]:
+def extract_stacks(input_string: str) -> dict[str,list[int]]:
     rows = input_string.split('\n')
     rows = [row for row in rows if row != '']
     stack_number_string = rows.pop()
