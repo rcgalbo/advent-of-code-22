@@ -1,49 +1,23 @@
 from dataclasses import dataclass
-from typing import Union, Iterator
+from typing import Dict, Union
+
+
+with open("data/day7.txt") as f:
+    data = f.read()
+    data = data.strip()
+
 
 @dataclass
 class File:
     name: str
-    size: int
+    size: int   
 
 @dataclass
 class Directory:
-    path: list[str]
-    files: dict[str, Union[File, 'Directory']]
+    path: str
+    files: Dict[str, Union[File, 'Directory']]
     parent: Union[None, 'Directory'] = None
     size: int = -1
-
-def learn_filesystem(raw: str) -> Directory:
-    root = Directory([], {})
-    pwd: Directory = root
-    commands = [x.strip() for x in raw.split("$ ") if x.strip()]
-    
-    for command in commands:
-        lines = command.split("\n")
-        match lines:
-            case ['ls', *rest]:
-                for listing in rest:
-                    match listing.split():
-                        case ['dir', dirname]:
-                            if "dirname" not in pwd.files:
-                                pwd.files[dirname] = Directory(pwd.path + [dirname], {}, pwd)
-                        case [size, filename]:
-                            pwd.files[filename] = File(filename, int(size))
-            case [cd]:
-                match cd.split():
-                    case ["cd", "/"]:
-                        pwd = root
-                    case ["cd", '..']:
-                        pwd = pwd.parent if pwd.parent else pwd
-                    case ['cd', dirname]:
-                        if dirname in pwd.files:
-                            newdir = pwd.files[dirname]
-                            assert isinstance(newdir, Directory)
-                            pwd = newdir
-                        else:
-                            pwd.files[dirname] = Directory(pwd.path + [dirname], {}, pwd)
-    compute_sizes(root)
-    return root
 
 def compute_sizes(dir: Directory) -> int:
     dir_size = 0
@@ -57,56 +31,70 @@ def compute_sizes(dir: Directory) -> int:
 
     return dir_size
 
+def load_fs(data: str) -> Directory:
+    root = Directory("/", {})
+    pwd = root
+    
+    lines = [x.strip() for x in data.split("$ ") if x.strip()]
 
-def all_directories_below(root: Directory, size: int = 100000) -> Iterator[Directory]:
-    if root.size <= size:
-        yield root
+    for line in lines:
+        if line.startswith("cd"):
+            path = line.split(" ")[1]
+            if path == "/":
+                pwd = root
+            elif path == "..":
+                pwd = pwd.parent
+            else:
+                pwd = pwd.files[path]
+        elif line.startswith("ls"):
+            parts = line.split("\n")[1:]
+            for part in parts:
+                file = part.split(" ")
+                if file[0] == 'dir':
+                    name = file[1]
+                    if pwd.path == '/':
+                        pwd.files[name] = Directory(pwd.path + name, {}, pwd)
+                    else:
+                        pwd.files[name] = Directory(pwd.path + '/' + name, {}, pwd)
+                else:
+                    size, name = file
+                    pwd.files[name] = File(name, int(size))
+
+    compute_sizes(root) 
+    return root
+
+# add directory sizes to root
+def all_dirs_less(root: Directory, max_size: int) -> int:
+    total = 0
     for file in root.files.values():
         match file:
-            case Directory():
-                yield from all_directories_below(file, size)
-            case _:
-                pass
+            case File(_, _):
+                continue
+            case Directory(_, _, _, dir_size):
+                if dir_size < max_size:
+                    total += dir_size
+                total += all_dirs_less(file, max_size)
+    return total
 
-if __name__ == "__main__":
-        
-    dat = """$ cd /
-    $ ls
-    dir a
-    14848514 b.txt
-    8504156 c.dat
-    dir d
-    $ cd a
-    $ ls
-    dir e
-    29116 f
-    2557 g
-    62596 h.lst
-    $ cd e
-    $ ls
-    584 i
-    $ cd ..
-    $ cd ..
-    $ cd d
-    $ ls
-    4060174 j
-    8033020 d.log
-    5626152 d.ext
-    7214296 k"""
+fs = load_fs(data)
+print(all_dirs_less(fs, 100_000))
 
-    fs = learn_filesystem(dat)
+TOTAL_DISK = 70_000_000
+SPACE_NEEDED = 30_000_000
 
-    assert sum(dir.size for dir in all_directories_below(fs)) == 95437
+SPACE_AVAILABLE = TOTAL_DISK - fs.size
+FREE = SPACE_NEEDED - SPACE_AVAILABLE
 
-    # part 1
-    with open('data/day7.txt') as f:
-        fs = learn_filesystem(f.read())
-    print(sum(dir.size for dir in all_directories_below(fs)))
+def all_dirs_larger(root: Directory, min_size: int) -> int:
+    dirs = []
+    for file in root.files.values():
+        match file:
+            case File(_, _):
+                continue
+            case Directory(path, _, _, dir_size):
+                if dir_size > min_size:
+                    dirs.append((path, dir_size))
+                dirs.extend(all_dirs_larger(file, min_size))
+    return dirs
 
-    Total_Disk_Size = 70_000_000
-    Need_Unused_Size = 30_000_000
-    Max_Size = Total_Disk_Size - Need_Unused_Size
-
-    Used_Size = fs.size
-    Need_To_Free = Used_Size - Max_Size 
-    assert Need_To_Free == 8_381_165
+print(sorted(all_dirs_larger(fs, FREE), key=lambda x: x[1]))
